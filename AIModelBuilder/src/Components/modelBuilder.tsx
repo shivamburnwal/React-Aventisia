@@ -154,7 +154,7 @@ const ModelBuilder = () => {
               </button>
             </div>
             <div className="flex-1 overflow-auto">
-              <TableComponent data={data} page={currentPage} text={searchText} />
+              <TableComponent data={data} page={currentPage} />
             </div>
             <div className="bg-white bottom-auto w-full">
               <div className="flex justify-between items-center">
