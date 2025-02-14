@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { LuNotebookText } from "react-icons/lu";
 import { TiCogOutline } from "react-icons/ti";
-import { BiSupport, BiSort } from "react-icons/bi";
+import { BiSupport } from "react-icons/bi";
 import { HiMiniSquares2X2, HiMiniSquare3Stack3D } from "react-icons/hi2";
 import { FaBell, FaCalendar, FaChevronDown, FaChevronLeft, FaChevronRight, FaFilter, FaHeart, FaPlus, FaUser } from "react-icons/fa";
-import logo from "./Images/logo_light.svg";
+import logo from "../Images/logo_light.svg";
+import TableComponent from "./table";
+import ModelData from "../interfaces";
 
-const dummyData = Array.from({ length: 66 }, (_, i) => ({
+const dummyData: ModelData[] = Array.from({ length: 66 }, (_, i) => ({
   key: i,
   name: `Model ${i + 1}`,
   id: `#${5412400 + i}`,
@@ -25,13 +27,12 @@ const ModelBuilder = () => {
   const [newModel, setNewModel] = useState({ name: "", type: "", llm: "", description: "" });
   const pageSize = 5;
   const totalPages = Math.ceil(data.length / pageSize);
-  const displayedData = data.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
-    console.log(e.target.value);
+    setCurrentPage(1);
     setData(
-      dummyData.filter((item) => 
+      dummyData.filter((item) =>
         item.name.toLowerCase().includes(e.target.value.toLowerCase()) ||
         item.id.toLowerCase().includes(e.target.value.toLowerCase()))
     );
@@ -47,7 +48,7 @@ const ModelBuilder = () => {
     setNewModel({ name: "", type: "", llm: "", description: "" });
     setIsModalOpen(false);
   };
-  
+
   const renderPageNumbers = () => {
     const pages = [];
     if (totalPages <= 6) {
@@ -138,9 +139,9 @@ const ModelBuilder = () => {
               </button>
             </div>
             <div className="flex space-x-4 mb-4">
-              <input 
-                type="text" 
-                placeholder="Search by Name, ID" 
+              <input
+                type="text"
+                placeholder="Search by Name, ID"
                 value={searchText}
                 onChange={handleSearch}
                 className="bg-gray-100 px-4 py-2 rounded w-[90%]"
@@ -153,53 +154,12 @@ const ModelBuilder = () => {
               </button>
             </div>
             <div className="flex-1 overflow-auto">
-              <table className="w-full bg-gray-10 rounded">
-                <thead>
-                  <tr className="text-left">
-                    {["Model Name", "Model Type", "Description", "Created On", "Last Trained On", "Status", "Action"].map((header) => (
-                      <th key={header} className="p-3 text-center cursor-pointer">
-                        {header}
-                        <span className="inline-block ml-1 text-gray-400">
-                          <button onClick={() => console.log("clicked")}>
-                            <BiSort />
-                          </button>
-                        </span>
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {displayedData.map((item, index) => (
-                    <tr key={item.key} className={`h-8 text-center ${index !== displayedData.length - 1 ? "border-b border-gray-300" : ""}`}>
-                      <td className="p-3">
-                        <div>{item.name}</div>
-                        <div className="text-gray-500 text-sm">ID: {item.id}</div>
-                      </td>
-                      <td className="p-3">{item.type}</td>
-                      <td className="p-3">{item.description}</td>
-                      <td className="p-3">{item.createdOn}</td>
-                      <td className="p-3">{item.lastTrainedOn}</td>
-                      <td className="p-3">
-                        <span
-                          className={`px-5 py-1 rounded-10 text-sm ${
-                            item.status === "Active" ? "bg-green-200 text-green" : "bg-red-200 text-red"
-                            }`}
-                        >
-                          {item.status}
-                        </span>
-                      </td>
-                      <td className="p-3">
-                        <button className="text-gray-600 hover:text-black text-xl px-2">⋮</button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <TableComponent data={data} page={currentPage} text={searchText} />
             </div>
             <div className="bg-white bottom-auto w-full">
               <div className="flex justify-between items-center">
                 <span>
-                  Showing {(currentPage - 1) * pageSize + 1} to{" "}
+                  Showing {(currentPage - 1) * pageSize + 1} to {" "}
                   {Math.min(currentPage * pageSize, data.length)} of {data.length} results.
                 </span>
                 <div className="flex items-center space-x-2">
