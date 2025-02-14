@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+
+
+.custom-input {
+    height: 36px;  /* Adjust height as needed */
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.secondary-color {
+    background-color: #1E1B4B;
+}
+
+.primary-color {
+    background-color: #4F46E5;
+}
+
+.th {
+    user-select: none;  /* Prevent text selection */
+    pointer-events: none; /* Prevent interactions */
+}
