@@ -96,12 +96,14 @@ const TableComponent: React.FC<TableProps> = ({ data, page }) => {
                             <div className="text-gray-500 text-sm">ID: {item.id}</div>
                         </td>
                         <td className="p-3">{item.type}</td>
-                        <td className="p-3">{item.description}</td>
+                        <td className="p-3 whitespace-nowrap overflow-hidden text-ellipsis max-w-xs">
+                            <span title={item.description}>{item.description.length > 10 ? `${item.description.slice(0, 10)}...` : item.description}</span>
+                        </td>
                         <td className="p-3">{item.createdOn}</td>
                         <td className="p-3">{item.lastTrainedOn}</td>
-                        <td className="p-3">
+                        <td className="p-3 w-24 text-center">
                             <span
-                                className={`px-5 py-1 rounded-10 text-sm ${item.status === "Active"
+                                className={`inline-flex items-center justify-center px-5 py-1 w-20 rounded-xs text-sm ${item.status === "Active"
                                     ? "bg-green-200 text-green"
                                     : "bg-red-200 text-red"
                                     }`}
