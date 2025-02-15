@@ -8,12 +8,20 @@ import logo from "../Images/logo_light.svg";
 import TableComponent from "./table";
 import ModelData from "../interfaces";
 
+const modelTypes = ["Extraction", "Classification", "Regression"];
+const descriptions = [
+  "AI-powered data extraction",
+  "Advanced machine learning model",
+  "Optimized for high accuracy",
+  "Fast and scalable solution",
+  "Designed for large datasets",
+];
 const dummyData: ModelData[] = Array.from({ length: 66 }, (_, i) => ({
   key: i,
   name: `Model ${i + 1}`,
   id: `#${5412400 + i}`,
-  type: "Extraction",
-  description: "Sample description",
+  type: modelTypes[Math.floor(Math.random() * modelTypes.length)],
+  description: descriptions[Math.floor(Math.random() * descriptions.length)],
   createdOn: "14/02/2025",
   lastTrainedOn: "14/02/2025",
   status: Math.random() > 0.5 ? "Active" : "InActive",
@@ -51,29 +59,21 @@ const ModelBuilder = () => {
 
   const renderPageNumbers = () => {
     const pages = [];
-    const maxVisibleNumbers = 5;
     if (totalPages <= 7) {
-      for (let i = 1; i <= maxVisibleNumbers + 2; i++) {
+      for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
       }
     }
     else {
       pages.push(1);
-      
-      let start = Math.max(2, currentPage - 4);
-      let end = Math.min(totalPages - 1, currentPage + 4);
 
-      if (start > 2)
-        pages.push("...");
-
-      for (let i = start; i <= end; i++) {
-        pages.push(i);
+      if (currentPage <= 4) {
+        pages.push(2, 3, 4, 5, "...", totalPages);
+      } else if (currentPage >= totalPages - 3) {
+        pages.push("...", totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+      } else {
+        pages.push("...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages);
       }
-
-      if (end < totalPages - 1) 
-        pages.push("...");
-
-      pages.push(totalPages);
     }
     console.log(pages);
     return pages.slice(0, 7);
@@ -173,8 +173,8 @@ const ModelBuilder = () => {
                   {Math.min(currentPage * pageSize, data.length)} of {data.length} results.
                 </span>
                 <div className="flex items-center space-x-2">
-                  <button 
-                    disabled={currentPage === 1} 
+                  <button
+                    disabled={currentPage === 1}
                     onClick={() => setCurrentPage(currentPage - 1)}
                     className="w-6 h-6 mx-3 flex items-center justify-center rounded-full bg-blue-200 text-blue-500 disabled:opacity-50"
                   >
@@ -232,6 +232,7 @@ const ModelBuilder = () => {
                     <option value="" disabled>
                       Select
                     </option>
+                    <option value="Extraction">Extraction</option>
                     <option value="Classification">Classification</option>
                     <option value="Regression">Regression</option>
                   </select>
