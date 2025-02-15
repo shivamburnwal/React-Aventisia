@@ -14,9 +14,9 @@ const dummyData: ModelData[] = Array.from({ length: 66 }, (_, i) => ({
   id: `#${5412400 + i}`,
   type: "Extraction",
   description: "Sample description",
-  createdOn: "29/02/2024",
-  lastTrainedOn: "29/02/2024",
-  status: "Active",
+  createdOn: "14/02/2025",
+  lastTrainedOn: "14/02/2025",
+  status: Math.random() > 0.5 ? "Active" : "InActive",
 }));
 
 const ModelBuilder = () => {
@@ -51,22 +51,32 @@ const ModelBuilder = () => {
 
   const renderPageNumbers = () => {
     const pages = [];
-    if (totalPages <= 6) {
-      for (let i = 1; i <= totalPages; i++) {
+    const maxVisibleNumbers = 5;
+    if (totalPages <= 7) {
+      for (let i = 1; i <= maxVisibleNumbers + 2; i++) {
         pages.push(i);
       }
-    } else {
+    }
+    else {
       pages.push(1);
-      if (currentPage > 4) pages.push("...");
-      let start = Math.max(2, currentPage - 1);
-      let end = Math.min(totalPages - 1, currentPage + 1);
+      
+      let start = Math.max(2, currentPage - 4);
+      let end = Math.min(totalPages - 1, currentPage + 4);
+
+      if (start > 2)
+        pages.push("...");
+
       for (let i = start; i <= end; i++) {
         pages.push(i);
       }
-      if (currentPage < totalPages - 3) pages.push("...");
+
+      if (end < totalPages - 1) 
+        pages.push("...");
+
       pages.push(totalPages);
     }
-    return pages;
+    console.log(pages);
+    return pages.slice(0, 7);
   };
 
   return (
@@ -83,10 +93,10 @@ const ModelBuilder = () => {
             className="border border-gray-400 px-4 py-2 rounded-md w-1/4"
           />
           <div className="flex items-center space-x-4">
-            <FaBell className="h-6 w-6 cursor-pointer" />
-            <FaHeart className="h-6 w-6 cursor-pointer" />
-            <div className="h-6 w-px bg-gray-400" />
-            <FaUser className="h-6 w-6 cursor-pointer" />
+            <FaBell className="h-5 w-5 cursor-pointer" />
+            <FaHeart className="h-5 w-5 cursor-pointer" />
+            <div className="h-5 w-px bg-gray-400" />
+            <FaUser className="h-5 w-5 cursor-pointer" />
             <div className="flex items-center space-x-2 cursor-pointer">
               <div className="flex flex-col text-sm">
                 <span className="font-semibold">Neurotic Spy</span>
@@ -129,7 +139,7 @@ const ModelBuilder = () => {
           </ul>
         </div>
 
-        <div className="w-[82%] bg-gray-100 p-6">
+        <div className="w-[82%] bg-gray-100 p-5">
           <div className="flex flex-col max-h-[85vh] h-screen shadow-sm bg-white p-4">
             <div className="flex justify-between mb-4">
               <h2 className="text-2xl font-bold">Model Builder</h2>
@@ -163,15 +173,23 @@ const ModelBuilder = () => {
                   {Math.min(currentPage * pageSize, data.length)} of {data.length} results.
                 </span>
                 <div className="flex items-center space-x-2">
-                  <button disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>
+                  <button 
+                    disabled={currentPage === 1} 
+                    onClick={() => setCurrentPage(currentPage - 1)}
+                    className="w-6 h-6 mx-3 flex items-center justify-center rounded-full bg-blue-200 text-blue-500 disabled:opacity-50"
+                  >
                     <FaChevronLeft />
                   </button>
                   {renderPageNumbers().map((page, index) => (
-                    <button key={index} className={page === currentPage ? "font-bold" : ""} onClick={() => page !== "..." && setCurrentPage(page as number)}>
+                    <button key={index} className={`mx-2 w-6 h-6 flex items-center justify-center ${page === currentPage ? "font-bold bg-blue-500 text-white rounded-full" : "text-blue-500"}`} onClick={() => page !== "..." && setCurrentPage(page as number)}>
                       {page}
                     </button>
                   ))}
-                  <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(currentPage + 1)}>
+                  <button
+                    disabled={currentPage === totalPages}
+                    onClick={() => setCurrentPage(currentPage + 1)}
+                    className="w-6 h-6 mx-3 flex items-center justify-center rounded-full bg-blue-200 text-blue-500 disabled:opacity-50"
+                  >
                     <FaChevronRight />
                   </button>
                 </div>
